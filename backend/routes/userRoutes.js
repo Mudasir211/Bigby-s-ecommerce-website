@@ -27,9 +27,9 @@ router.post("/login", async (req, res) => {
 
     // Set cookie
     res.cookie("token", token, {
-      httpOnly: true, // JS can't access it (safe)
-      secure: false, // true if you use HTTPS
-      sameSite: "lax",
+      httpOnly: true,
+  secure: true,
+  sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -66,9 +66,9 @@ router.post("/signup", async (req, res) => {
 
     // Set cookie
     res.cookie("token", token, {
-      httpOnly: true, // JS can't access it (safe)
-      secure: false, // true if you use HTTPS
-      sameSite: "lax",
+      httpOnly: true,
+  secure: true,
+  sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
