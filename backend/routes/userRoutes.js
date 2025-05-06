@@ -4,7 +4,6 @@ import usersModel from "../models/Users.js";
 import bcrypt from "bcrypt";
 import authMiddleware from "../middleWare/authMiddleware.js";
 
-import { RiComputerFill } from "react-icons/ri";
 import orderModel from "../models/orderModel.js";
 const router = express.Router();
 
