@@ -25,9 +25,9 @@ router.post("/login", async (req, res) => {
 
     // Set cookie
     res.cookie("adminToken", token, {
-      httpOnly: true, // JS can't access it (safe)
-      secure: false, // true if you use HTTPS
-      sameSite: "lax",
+      httpOnly: true,
+  secure: true,
+  sameSite: 'None',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
     res.status(200).json({ message: "Login successful" });
