@@ -59,7 +59,7 @@ function Header({showForm,setShowForm}) {
   }} className='w-5 h-5 '><img className='w-full h-full ' src={ AccountIcon } alt="" />  </button>
       <button onClick={()=>navigate('/Cart')} className='relative w-5 h-5'> <img src={Cart} alt=""  className='w-full h-full'/> <span className='absolute -bottom-1.5 -right-1.5 text-white bg-black text-[8px] flex justify-center items-center w-3.5 h-3.5 rounded-full'>{cartTotal()}</span> </button>
 
-      <button onClick={()=>setShowMenu(true)} className='w-5 sm:hidden h-3.5'><img className='w-full h-full' src={Menu} alt="" /></button>{showDropdown && userData?.user &&<div   className={`absolute flex z-50 flex-col gap-2 px-5 py-3 text-gray-500 rounded -bottom-32 outfit right-20 sm:right-10 w-36 bg-slate-100`}><p className="cursor-pointer hover:text-black">Source Code</p><p onClick={()=>navigate("/orders")} className="cursor-pointer hover:text-black">Orders</p><p onClick={()=>{logout();navigate("/");window.location.reload()}} className="cursor-pointer hover:text-black">Logout</p></div>}</div>
+      <button onClick={()=>setShowMenu(true)} className='w-5 sm:hidden h-3.5'><img className='w-full h-full' src={Menu} alt="" /></button>{showDropdown && userData?.user &&<div   className={`absolute flex z-50 flex-col gap-2 px-5 py-3 text-gray-500 rounded -bottom-32 outfit right-20 sm:right-10 w-36 bg-slate-100`}><p className="cursor-pointer hover:text-black">Source Code</p><p onClick={()=>navigate("/orders")} className="cursor-pointer hover:text-black">Orders</p><p onClick={async()=>{await logout();navigate("/");window.location.reload()}} className="cursor-pointer hover:text-black">Logout</p></div>}</div>
     </div>
     
    
