@@ -67,8 +67,8 @@ function App() {
     <Route path='/orders' element={<Orders/>}/>
     <Route path='/place-order' element={<PlaceOrder/>}/>
 
-<Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+{  isError && <Route path="/forgot-password" element={<ForgotPasswordPage />} />}
+  {  isError &&    <Route path="/reset-password/:token" element={<ResetPasswordPage />} />}
     </Routes>
     
    
