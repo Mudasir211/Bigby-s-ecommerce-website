@@ -4,7 +4,7 @@ import './App.css'
 import Header from './components/Header'
 import { Carousel } from 'react-responsive-carousel'
 import Home from './Pages/Home'
-
+import ScrollToTop from './components/ScrollToTop';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 // import AddProduct from './Pages/AddProduct'
 import Footer from './components/Footer'
@@ -35,6 +35,8 @@ function App() {
   return (
    
     <div className={` ${hideHeaderFooter ? 'p-0' : "px-5 sm:px-12  md:px-16 lg:px-28"}`}>
+        <ScrollToTop />
+
         <ToastContainer position="top-right"
                         autoClose={2000}
                         hideProgressBar={false}
