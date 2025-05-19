@@ -3,9 +3,10 @@ import {products} from "../assets/frontend_assets/assets"
 import { json, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useGetProductsQuery } from '../services/createApi'
-
+import { useGetReviewsQuery } from '../services/createApi'
 function RelatedProducts({category}) {
-    const {isfetching,data=[],refetch} = useGetProductsQuery()
+    const { refetch } = useGetReviewsQuery(productId);
+    const {isfetching,data=[]} = useGetProductsQuery()
     const productData = data
     if (isfetching){return <p>Loading</p>}
 
