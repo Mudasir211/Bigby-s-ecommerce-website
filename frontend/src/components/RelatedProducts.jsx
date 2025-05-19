@@ -38,7 +38,7 @@ const [products,setProducts]=useState([...productData])
              {
                products.map((item,i)=>{
     if (i<=4){
-        return <div  onClick={()=>{refetch();navigate(`/product/${item._id}`); window.scrollTo({ top: 0, behavior: 'smooth' });}} key={item._id} className='flex flex-col gap-2 text-xs cursor-pointer group'>
+        return <div  onClick={async ()=>{await refetch();navigate(`/product/${item._id}`); window.scrollTo({ top: 0, behavior: 'smooth' });}} key={item._id} className='flex flex-col gap-2 text-xs cursor-pointer group'>
        <div className='overflow-hidden'><img src={item.image[0] ||item.image[1] ||item.image[2] } className='transition-all delay-50 group-hover:scale-110' alt="" /></div>
        <div className=' [&>p]:opacity-70 flex flex-col gap-1 px-2'><p className=''>{item.name}</p>
        <p className='font-bold'>${item.price}</p></div>
