@@ -23,7 +23,7 @@ function Product() {
 
 
 
-     const { data : reviewsData,  } = useGetReviewsQuery(productId);
+     const { data : reviewsData,refetch  } = useGetReviewsQuery(productId);
 
   const averageRating =
     reviewsData?.reviews?.length > 0
@@ -92,6 +92,7 @@ const fetchData = () =>{
     if (productData.length > 0) {
         fetchData();
       }
+refetch()
   }, [productId,data])
  
   const add =()=>{
