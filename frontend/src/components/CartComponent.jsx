@@ -50,6 +50,10 @@ dispatch(actions.removeItem(itemId))
           }
           return 0;
         }
+    useEffect(() => {
+           
+            window.sessionStorage.setItem("items",JSON.stringify(dummyCart))
+            }, [dummyCart])
         
   return (
     <div >
@@ -74,7 +78,7 @@ return <div key={i} className="py-4 border-t border-b text-gray-700 grid grid-co
     </div>
     
     
-    <div className="flex justify-end my-20"><div className="w-full sm:w-[450px]"><div className="w-full"><div className="text-2xl"><div className="inline-flex items-center gap-2 mb-3"><p className="text-gray-500">CART <span className="font-medium text-gray-700">TOTALS</span></p><p className="w-8 sm:w-12 h-[1px] sm:h-[2px] bg-gray-700"></p></div></div><div className="flex flex-col gap-2 mt-2 text-sm"><div className="flex justify-between"><p>Subtotal</p><p>${subtotal().toFixed(2)}</p></div><hr/><div className="flex justify-between"><p>Shipping Fee</p><p>{cart && cart.length>0?"$10.00":"$0.00" }</p></div><hr/><div className="flex justify-between"><b>Total</b><b>${(subtotal() + 10).toFixed(2)}</b></div></div></div><div className="w-full text-end"><button onClick={()=>navigate('/place-order')} className="px-8 py-3 my-8 text-sm text-white bg-black">PROCEED TO CHECKOUT</button></div></div></div></div>
+    <div className="flex justify-end my-20"><div className="w-full sm:w-[450px]"><div className="w-full"><div className="text-2xl"><div className="inline-flex items-center gap-2 mb-3"><p className="text-gray-500">CART <span className="font-medium text-gray-700">TOTALS</span></p><p className="w-8 sm:w-12 h-[1px] sm:h-[2px] bg-gray-700"></p></div></div><div className="flex flex-col gap-2 mt-2 text-sm"><div className="flex justify-between"><p>Subtotal</p><p>${subtotal().toFixed(2)}</p></div><hr/><div className="flex justify-between"><p>Shipping Fee</p><p>{dummyCart && dummyCart.length>0 || cart && cart.length>0?"$10.00":"$0.00" }</p></div><hr/><div className="flex justify-between"><b>Total</b><b>${(subtotal() + ((dummyCart && dummyCart.length>0 || cart && cart.length>0) ? 10 : 0)).toFixed(2)}</b></div></div></div><div className="w-full text-end"><button onClick={()=>{navigate('/place-order');dispatch(actions.addOrderItem({}))}} disabled={cart.length<=0 && dummyCart.length<=0} className="px-8 py-3 my-8 text-sm text-white bg-black disabled:opacity-50 disabled:cursor-not-allowed">PROCEED TO CHECKOUT</button></div></div></div></div>
     </div>
   )
 }
