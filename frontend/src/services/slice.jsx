@@ -5,7 +5,7 @@ import { createSlice,configureStore,} from "@reduxjs/toolkit";
 
 export const newSlice = createSlice({
     name : "Slice",
-    initialState :{items:[]},
+    initialState :{items:JSON.parse(sessionStorage.getItem("items")) || [],orderItem : JSON.parse(sessionStorage.getItem("orderItem")) || {}},
     reducers :{
         setCart(state, action) {
             state.items = action.payload;
@@ -29,8 +29,16 @@ export const newSlice = createSlice({
 
                 }
                 
+          },addOrderItem(state, action) {
+            
+            state.orderItem = {}    
+            state.orderItem = action.payload
           },
-
+         incrementOrderQuantity(state,){
+           state.orderItem.quantity++
+         },decrementOrderQuantity(state,){
+           state.orderItem.quantity>1 && state.orderItem.quantity--
+         }
     }})
     
     export const actions = newSlice.actions
