@@ -71,9 +71,18 @@ export const productsApi = createApi({
       }),
       invalidatesTags: ["Cart"],
     }),
+    
     addOrder: builder.mutation({
         query: (order) => ({
           url: "api/users/orders/add",
+          method: "POST",
+          body: order,
+        }),
+        invalidatesTags: ["Orders"],
+      }),
+      directOrder: builder.mutation({
+        query: (order) => ({
+          url: "api/users/orders/directOrder",
           method: "POST",
           body: order,
         }),
@@ -221,4 +230,5 @@ export const {
   useLoginWithGoogleMutation,
    useForgotPasswordMutation,
   useResetPasswordMutation,
+  useDirectOrderMutation
 } = productsApi;
