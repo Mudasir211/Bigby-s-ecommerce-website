@@ -287,6 +287,61 @@ router.post("/orders/add", authMiddleware, async (req, res) => {
   }
 });
 
+router.post("/orders/directOrder", authMiddleware, async (req, res) => {
+  try {
+    const {
+      productId,
+      name,
+      price,
+      size,
+      imgUrl,
+      quantity,
+      fName,
+      lName,
+      email,
+      address,
+      city,
+      state,
+      zipcode,
+      country,
+      phone,
+      orderStatus,
+      total,
+      payment,
+    } = req.body;
+
+    const user = await usersModel.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const order = new orderModel({
+      userId: user._id,
+      fName,
+      lName,
+      email,
+      address,
+      city,
+      state,
+      zipcode,
+      country,
+      phone,
+      ordersData: [{ productId, name, price, size, imgUrl, quantity }],
+      orderStatus,
+      total,
+      payment,
+    });
+
+    await order.save();
+
+    await user.save();
+    res.status(200).json({ message: "Order Placed" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
   const user = await usersModel.findOne({ email });
