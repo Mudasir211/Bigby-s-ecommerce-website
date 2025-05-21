@@ -1,11 +1,11 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import Header from './components/Header'
 import { Carousel } from 'react-responsive-carousel'
 import Home from './Pages/Home'
-import ScrollToTop from './components/ScrollToTop';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+
+import { BrowserRouter, Route, Routes, } from 'react-router-dom'
 // import AddProduct from './Pages/AddProduct'
 import Footer from './components/Footer'
 import Product from './Pages/Product'
@@ -25,18 +25,25 @@ import ForgotPasswordPage from './Pages/ForgotPasswordPage'
 import ResetPasswordPage from './Pages/ResetPasswordPage'
 import { useGetMeQuery } from './services/createApi'
 import { ToastContainer } from 'react-toastify'
+import ScrollToTop from './components/ScrollToTop'
+import { useLocation } from "react-router-dom";
 
 
 function App() {
-    const {data :userData,isSuccess,isError} =useGetMeQuery()
     const location = useLocation();
+      
+    
+        const [showDropdown,setShowDropdown] =useState(false)
+    useEffect(() => {
+    setShowDropdown(false)
+  }, [location.pathname]);
+    const {data :userData,isSuccess,isError} =useGetMeQuery()
     const hideHeaderFooter = ['/AdminLogin', '/AdminPanel'].includes(location.pathname);
  const [showForm,setShowForm] =useState(false)
   return (
    
     <div className={` ${hideHeaderFooter ? 'p-0' : "px-5 sm:px-12  md:px-16 lg:px-28"}`}>
-        <ScrollToTop />
-
+        <ScrollToTop/>
         <ToastContainer position="top-right"
                         autoClose={2000}
                         hideProgressBar={false}
@@ -48,7 +55,7 @@ function App() {
                         pauseOnHover={false}
                         theme="light"
                          />
-    {!hideHeaderFooter && <Header showForm={showForm} setShowForm={setShowForm} />}
+    {!hideHeaderFooter && <Header showDropdown={showDropdown} setShowDropdown={setShowDropdown} showForm={showForm} setShowForm={setShowForm} />}
     <Routes>
 
        <Route path='/Collection' element={<Collection  showForm={showForm} setShowForm={setShowForm}/>}/>
@@ -69,8 +76,8 @@ function App() {
     <Route path='/orders' element={<Orders/>}/>
     <Route path='/place-order' element={<PlaceOrder/>}/>
 
-{  isError && <Route path="/forgot-password" element={<ForgotPasswordPage />} />}
-  {  isError &&    <Route path="/reset-password/:token" element={<ResetPasswordPage />} />}
+<Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
     </Routes>
     
    
