@@ -96,6 +96,8 @@ const fetchData = () =>{
   }, [productId,data])
   
 const directOrder = ()=>{
+    selectSize.length<=0 && notify()
+
     selectSize.length>0 &&  dispatch(actions.addOrderItem({productId:product._id,name:product.name,price: product.price,size: selectSize,imgUrl:product.image[0],quantity: +1,_id:nanoid()} )) 
    selectSize.length>0 && navigate("/place-order")
     

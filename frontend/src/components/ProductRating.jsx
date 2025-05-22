@@ -4,7 +4,7 @@ import { FaStar } from 'react-icons/fa';
 import AverageStars from './AverageStars';
 
 const RatingSystem = ({ ratings,averageRating }) => {
-    
+   
   // Calculate total reviews
   const totalReviews = ratings && ratings.length;
 

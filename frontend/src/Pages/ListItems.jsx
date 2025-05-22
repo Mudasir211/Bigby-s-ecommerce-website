@@ -56,7 +56,17 @@ if(i>51){
 
 
   return (
-    <>
+    <><ToastContainer position="top-right"
+                            autoClose={2000}
+                            hideProgressBar={false}
+                            newestOnTop={true}
+                            closeOnClick={true}
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover={false}
+                            theme="light"
+                             />
       <div className=" sm:mx-auto sm:ml-[max(5vw,25px)] sm:my-8 text-gray-600 text-base"><p className="mb-2">All Products List</p>
       
       <div className="flex flex-col gap-2">

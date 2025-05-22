@@ -1,11 +1,13 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const sendEmail = async ({ to, subject, html }) => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
-      secure: false,
+      secure: false, // Use TLS
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -13,7 +15,7 @@ export const sendEmail = async ({ to, subject, html }) => {
     });
 
     await transporter.sendMail({
-      from: `"Bigby's Store" <${process.env.EMAIL_USER}>`,
+      from: `"Bigby's" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,

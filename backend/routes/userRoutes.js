@@ -30,14 +30,7 @@ router.post("/auth/google", async (req, res) => {
     expiresIn: "7d",
   });
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
-
-  res.status(200).json({ message: "Google login successful" });
+  res.status(200).json({ message: "Google login successful", token });
 });
 
 router.post("/login", async (req, res) => {
@@ -55,18 +48,10 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Wrong Password" });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d", // cookie expires in 7 days
+      expiresIn: "7d", // token expires in 7 days
     });
 
-    // Set cookie
-    res.cookie("token", token, {
-      httpOnly: true, // JS can't access it (safe)
-      secure: true, // true if you use HTTPS
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -78,7 +63,7 @@ router.post("/signup", async (req, res) => {
     if (userExists) {
       return res
         .status(400)
-        .json({ message: "User already exists plese login instead" });
+        .json({ message: "User already exists please login instead" });
     }
     const saltRounds = 10;
 
@@ -94,29 +79,17 @@ router.post("/signup", async (req, res) => {
     const saved = await user.save();
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d", // cookie expires in 7 days
+      expiresIn: "7d",
     });
 
-    // Set cookie
-    res.cookie("token", token, {
-      httpOnly: true, // JS can't access it (safe)
-      secure: true, // true if you use HTTPS
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    res.status(201).json(saved);
+    res.status(201).json({ user: saved, token });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
 
 router.post("/logout", (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  });
+  // No cookie to clear, just send response
   res.status(200).json({ message: "Logged out successfully" });
 });
 
@@ -205,6 +178,7 @@ router.patch("/cart/update/:itemId", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Item not found in cart" });
 
     item.quantity = quantity;
+
     await user.save();
 
     res.json({ message: "Quantity updated", cart: user.cart });
@@ -281,7 +255,7 @@ router.post("/orders/add", authMiddleware, async (req, res) => {
     await order.save();
     user.cart = [];
     await user.save();
-    res.status(200).json({ message: "Item added to cart", cart: user.cart });
+    res.status(200).json({ message: "Order Placed" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -315,7 +289,13 @@ router.post("/orders/directOrder", authMiddleware, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    const date = new Date(); // current date & time
 
+    const year = date.getFullYear(); // e.g. 2025
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // months start at 0, so +1
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const formattedDate = `${year}-${month}-${day}`;
     const order = new orderModel({
       userId: user._id,
       fName,
@@ -327,7 +307,17 @@ router.post("/orders/directOrder", authMiddleware, async (req, res) => {
       zipcode,
       country,
       phone,
-      ordersData: [{ productId, name, price, size, imgUrl, quantity }],
+      ordersData: [
+        {
+          productId,
+          name,
+          price,
+          size,
+          imgUrl,
+          quantity,
+          createdAt: formattedDate,
+        },
+      ],
       orderStatus,
       total,
       payment,
@@ -397,7 +387,7 @@ router.post("/reset-password/:token", async (req, res) => {
     await usersModel.findByIdAndUpdate(decoded.id, { password: hashed });
 
     res.status(200).json({ message: "Password reset successful" });
-  } catch (err) {
+  } catch (error) {
     res.status(400).json({ message: "Invalid or expired token" });
   }
 });

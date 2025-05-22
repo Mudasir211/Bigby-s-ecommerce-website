@@ -15,60 +15,65 @@ router.post("/login", async (req, res) => {
     if (!admin) {
       return res.status(400).json({ message: "Admin does not exist" });
     }
+
     const isPasswordCorrect = await bcrypt.compare(password, admin.password);
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Wrong Password" });
     }
+
     const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d", // cookie expires in 7 days
+      expiresIn: "7d",
     });
 
-    // Set cookie
-    res.cookie("adminToken", token, {
-      httpOnly: true, // JS can't access it (safe)
-      secure: true, // true if you use HTTPS
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-    res.status(200).json({ message: "Login successful" });
+    // Send token in JSON response instead of cookie
+    res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 router.get("/orders", adminAuthMiddleware, async (req, res) => {
   try {
     const orders = await orderModel.find().sort({ createdAt: -1 });
-
-    res.json(orders); // send user
+    res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
 router.post("/orders/status", adminAuthMiddleware, async (req, res) => {
   try {
     const { orderId, newStatus } = req.body;
     const order = await orderModel.findById(orderId);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
     order.orderStatus = newStatus;
     await order.save();
 
-    res.status(201).json(); // send user
+    res.status(201).json({ message: "Order status updated" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
 router.get("/me", adminAuthMiddleware, async (req, res) => {
-  const admin = await adminModel.findById(req.adminId);
+  try {
+    const admin = await adminModel.findById(req.adminId);
+    if (!admin) return res.status(404).json({ message: "Admin not found" });
 
-  if (!admin) return res.status(404).json({ message: "admin not found" });
-  res.status(200).json();
+    res.status(200).json({
+      id: admin._id,
+      email: admin.email,
+      // other info you want to send
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
+
+// Logout endpoint is just a success message — frontend handles clearing localStorage
 router.post("/logout", (req, res) => {
-  res.clearCookie("adminToken", {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  });
   res.status(200).json({ message: "Logged out successfully" });
 });
+
 export default router;

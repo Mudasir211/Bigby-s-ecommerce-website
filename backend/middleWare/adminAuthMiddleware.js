@@ -1,16 +1,18 @@
 import jwt from "jsonwebtoken";
 
 const adminAuthMiddleware = (req, res, next) => {
-  const token = req.cookies.adminToken; // getting cookie
+  const tokenHeader = req.headers["x-admin-auth"];
 
-  if (!token) {
+  if (!tokenHeader || !tokenHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Not logged in" });
   }
 
+  const token = tokenHeader.split(" ")[1];
+
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // use same secret everywhere
-    req.adminId = decoded.id; // store user's id on request
-    next(); // move to next
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.adminId = decoded.id;
+    next();
   } catch (error) {
     return res.status(401).json({ message: "Invalid Token" });
   }

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 function GoogleSignIn() {
+    
   const [loginWithGoogle] = useLoginWithGoogleMutation()
   const navigate = useNavigate()
 
@@ -16,8 +17,22 @@ function GoogleSignIn() {
               credential: credentialResponse.credential,
             }).unwrap()
 
-            toast.success('Google login successful')
-            navigate('/')
+            // ✅ Save token to localStorage
+            if  (res.token) {
+              localStorage.setItem('token', res.token)
+          toast.success("Logged in Successfully")
+              
+
+               
+                setTimeout(() => {
+     navigate('/'); window.location.reload() }, 1000)
+               
+    //      
+       }
+
+           
+
+            
           } catch (err) {
             toast.error(err?.data?.message || 'Google login failed')
           }
